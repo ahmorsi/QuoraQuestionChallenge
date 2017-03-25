@@ -30,3 +30,6 @@ class Preprocessing(object):
 
     def break_sentence(self):
         return list(map(lambda v: NltkUtil.break_sentence(v), self.__questions))
+
+    def normalize_text(self):
+        return list(map(lambda v: v.lower(), self.__questions))
