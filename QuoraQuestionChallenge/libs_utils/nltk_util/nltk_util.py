@@ -1,7 +1,6 @@
 import nltk
 from nltk.stem.porter import PorterStemmer
 from nltk.stem.wordnet import WordNetLemmatizer
-
 #nltk.download('punkt') #uncommend this to install the needed package
 
 
@@ -43,4 +42,8 @@ class NltkUtil:
     @staticmethod
     def lexical_parse(question_tokens):
         pass
+
+    @staticmethod
+    def break_sentence(question):
+        return nltk.sent_tokenize(question, language='english')
 
