@@ -30,11 +30,20 @@ class DataReader(object):
         questions1 = list(df_train['question1'])
         questions2 = list(df_train['question2'])
         is_duplicate = list(df_train['is_duplicate'])
+        nan = ""
 
         for i in range(0, len(ids)):
-            self.__questions_ids[int(q1_ids[i])] = questions1[i]
-            self.__questions_ids[int(q2_ids[i])] = questions2[i]
-            self.__all_train_data.append((questions1[i], questions2[i]))
+            question1, question2 = str(questions1[i]), str(questions2[i])
+
+            if questions1[i] == "nan":
+                question1 = ""
+
+            if questions2[i] == "nan":
+                question2 = ""
+
+            self.__questions_ids[int(q1_ids[i])] = question1
+            self.__questions_ids[int(q2_ids[i])] = question2
+            self.__all_train_data.append((question1, question2))
             self.__all_train_labels.append(int(is_duplicate[i]))
             self.__data_id[int(ids[i])] = (self.__all_train_data[-1], self.__all_train_labels[-1])
 

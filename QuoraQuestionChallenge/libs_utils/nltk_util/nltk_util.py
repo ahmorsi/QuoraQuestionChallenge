@@ -1,7 +1,7 @@
 import nltk
 from nltk.stem.porter import PorterStemmer
 from nltk.stem.wordnet import WordNetLemmatizer
-#nltk.download('punkt') #uncommend this to install the needed package
+#nltk.download('wordnet') #uncommend this to install the needed package
 
 
 class NltkUtil:
@@ -33,11 +33,11 @@ class NltkUtil:
 
     @staticmethod
     def stem(tokens):
-        return list(map(lambda v: PorterStemmer().stem(v), tokens)) if len(tokens) > 1 else PorterStemmer().stem(tokens)
+        return list(map(lambda v: PorterStemmer().stem(v), tokens))
 
     @staticmethod
     def lemmatize(tokens):
-        return list(map(lambda v: WordNetLemmatizer().lemmatize(v), tokens)) if len(tokens) > 1 else WordNetLemmatizer().lemmatize(tokens)
+        return list(map(lambda v: WordNetLemmatizer().lemmatize(v), tokens))
 
     @staticmethod
     def lexical_parse(question_tokens):
