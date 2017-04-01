@@ -58,19 +58,112 @@ for i in range(0, len(clean_question_pairs)):
             for word in chunk.words:
                 tokens_tags[(word.index, word.string)] = word.tag
                 tokens_chunks[(word.index, word.string)] = word.chunk
-                tokens_roles[(word.index, word.string)] = chunk.relations
-                
-                #TODO
+                tokens_roles[(word.index, word.string)] = chunk.role
 
+        question1.set_tokens_tags(tokens_tags)
+        question1.set_tokens_chunks(tokens_chunks)
+        question1.set_tokens_roles(tokens_roles)
+        
+    else:
+        parse_string = str(parse(question1_string, relations=True))
+        question1.set_parse_tree_string(parse_string)
+        tokens_tags, tokens_roles, tokens_chunks = {}, {}, {}
 
+        for chunk in question1_parsetree[0]:
+            for word in chunk.words:
+                tokens_tags[(word.index, word.string)] = word.tag
+                tokens_chunks[(word.index, word.string)] = word.chunk
+                tokens_roles[(word.index, word.string)] = chunk.role
 
-s = ''
-s = parse(s, relations=True)
-print(s)
-print(s.chunk)
+        question1.set_tokens_tags(tokens_tags)
+        question1.set_tokens_chunks(tokens_chunks)
+        question1.set_tokens_roles(tokens_roles)
+
+        partial_questions = []
+
+        for partial_question in question1_parsetree[1:]:
+            partial_question_string = partial_question.string
+            partial_question_object = Question(partial_question_string)
+
+            parse_string = str(parse(partial_question_string, relations=True))
+            partial_question_parse_tree = parsetree(partial_question_string, relations=True)
+            partial_question_object.set_parse_tree_string(parse_string)
+            tokens_tags, tokens_roles, tokens_chunks = {}, {}, {}
+
+            for chunk in partial_question_parse_tree[0]:
+                for word in chunk.words:
+                    tokens_tags[(word.index, word.string)] = word.tag
+                    tokens_chunks[(word.index, word.string)] = word.chunk
+                    tokens_roles[(word.index, word.string)] = chunk.role
+
+            partial_question_object.set_tokens_tags(tokens_tags)
+            partial_question_object.set_tokens_chunks(tokens_chunks)
+            partial_question_object.set_tokens_roles(tokens_roles)
+
+            partial_questions.append(partial_question_object)
+        
+        question1.set_partial_questions(partial_questions)
+
+    if len(question2_parsetree) == 1:
+        parse_string = str(parse(question1_string, relations=True))
+        question2.set_parse_tree_string(parse_string)
+        tokens_tags, tokens_roles, tokens_chunks = {}, {}, {}
+
+        for chunk in question2_parsetree[0]:
+            for word in chunk.words:
+                tokens_tags[(word.index, word.string)] = word.tag
+                tokens_chunks[(word.index, word.string)] = word.chunk
+                tokens_roles[(word.index, word.string)] = chunk.role
+        
+        question1.set_tokens_tags(tokens_tags)
+        question1.set_tokens_chunks(tokens_chunks)
+        question1.set_tokens_roles(tokens_roles)
+    
+    else:
+        parse_string = str(parse(question1_string, relations=True))
+        question2.set_parse_tree_string(parse_string)
+        tokens_tags, tokens_roles, tokens_chunks = {}, {}, {}
+
+        for chunk in question2_parsetree[0]:
+            for word in chunk.words:
+                tokens_tags[(word.index, word.string)] = word.tag
+                tokens_chunks[(word.index, word.string)] = word.chunk
+                tokens_roles[(word.index, word.string)] = chunk.role
+        
+        question2.set_tokens_tags(tokens_tags)
+        question2.set_tokens_chunks(tokens_chunks)
+        question2.set_tokens_roles(tokens_roles)
+        
+        partial_questions = []
+
+        for partial_question in question2_parsetree[1:]:
+            partial_question_string = partial_question.string
+            partial_question_object = Question(partial_question_string)
+
+            parse_string = str(parse(partial_question_string, relations=True))
+            partial_question_parse_tree = parsetree(partial_question_string, relations=True)
+            partial_question_object.set_parse_tree_string(parse_string)
+            tokens_tags, tokens_roles, tokens_chunks = {}, {}, {}
+
+            for chunk in partial_question_parse_tree[0]:
+                for word in chunk.words:
+                    tokens_tags[(word.index, word.string)] = word.tag
+                    tokens_chunks[(word.index, word.string)] = word.chunk
+                    tokens_roles[(word.index, word.string)] = chunk.role
+
+            partial_question_object.set_tokens_tags(tokens_tags)
+            partial_question_object.set_tokens_chunks(tokens_chunks)
+            partial_question_object.set_tokens_roles(tokens_roles)
+
+            partial_questions.append(partial_question_object)
+        
+        question2.set_partial_questions(partial_questions)
+
+"""
+s = 'This battle will be my masterpiece'
+s = parsetree(s, relations=True)
+
 for sentence in s:
-    for chunk in sentence.chunks:
-        for word in chunk.words:
-            print(word.relations)
+    print(sentence.chunks[0].role)"""
 
 
