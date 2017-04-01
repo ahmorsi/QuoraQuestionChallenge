@@ -20,10 +20,11 @@ lemmatized_questions_pairs = map(lambda v: (map(lambda u: u.encode('ascii', 'ign
 stemmed_questions_pairs = map(lambda v: (map(lambda u: u.encode('ascii', 'ignore'), v[0]), map(lambda u: u.encode('ascii', 'ignore'), v[1])), stemmed_questions_pairs)
 tokenized_question_pairs = map(lambda v: (map(lambda u: u.encode('ascii', 'ignore'), v[0]), map(lambda u: u.encode('ascii', 'ignore'), v[1])), tokenized_question_pairs)
 
-
+print(len(clean_question_pairs))
 questions = []
-
+    
 for i in range(0, len(clean_question_pairs)):
+    print(i)
     question1_string = clean_question_pairs[i][0]
     question2_string = clean_question_pairs[i][1]
 
@@ -46,8 +47,8 @@ for i in range(0, len(clean_question_pairs)):
     question1.set_question_tokens(tokenized_question1)
     question2.set_question_tokens(tokenized_question2)
 
-    question1_parsetree = parsetree(question1_string)
-    question2_parsetree = parsetree(question2_string)
+    question1_parsetree = parsetree(question1_string, relations=True)
+    question2_parsetree = parsetree(question2_string, relations=True)
 
     if len(question1_parsetree) == 1:
         parse_string = str(parse(question1_string, relations=True))
@@ -57,9 +58,10 @@ for i in range(0, len(clean_question_pairs)):
         for sentence in question1_parsetree:
             for chunk in sentence.chunks:
                 for word in chunk.words:
-                    tokens_tags[(word.index, word.string)] = word.tag
-                    tokens_chunks[(word.index, word.string)] = word.chunk
-                    tokens_roles[(word.index, word.string)] = chunk.role
+                    #print(chunk.role)
+                    tokens_tags[(int(word.index), str(word.string))] = word.tag
+                    tokens_chunks[(int(word.index), str(word.string))] = word.chunk
+                    tokens_roles[(int(word.index), str(word.string))] = chunk.role
 
         question1.set_tokens_tags(tokens_tags)
         question1.set_tokens_chunks(tokens_chunks)
@@ -73,9 +75,9 @@ for i in range(0, len(clean_question_pairs)):
         for sentence in question1_parsetree:
             for chunk in sentence.chunks:
                 for word in chunk.words:
-                    tokens_tags[(word.index, word.string)] = word.tag
-                    tokens_chunks[(word.index, word.string)] = word.chunk
-                    tokens_roles[(word.index, word.string)] = chunk.role
+                    tokens_tags[(int(word.index), str(word.string))] = word.tag
+                    tokens_chunks[(int(word.index), str(word.string))] = word.chunk
+                    tokens_roles[(int(word.index), str(word.string))] = chunk.role
 
         question1.set_tokens_tags(tokens_tags)
         question1.set_tokens_chunks(tokens_chunks)
@@ -95,9 +97,9 @@ for i in range(0, len(clean_question_pairs)):
             for sentence in partial_question_parse_tree:
                 for chunk in sentence.chunks:
                     for word in chunk.words:
-                        tokens_tags[(word.index, word.string)] = word.tag
-                        tokens_chunks[(word.index, word.string)] = word.chunk
-                        tokens_roles[(word.index, word.string)] = chunk.role
+                        tokens_tags[(int(word.index), str(word.string))] = word.tag
+                        tokens_chunks[(int(word.index), str(word.string))] = word.chunk
+                        tokens_roles[(int(word.index), str(word.string))] = chunk.role
 
             partial_question_object.set_tokens_tags(tokens_tags)
             partial_question_object.set_tokens_chunks(tokens_chunks)
@@ -115,9 +117,9 @@ for i in range(0, len(clean_question_pairs)):
         for sentence in question2_parsetree:
             for chunk in sentence.chunks:
                 for word in chunk.words:
-                    tokens_tags[(word.index, word.string)] = word.tag
-                    tokens_chunks[(word.index, word.string)] = word.chunk
-                    tokens_roles[(word.index, word.string)] = chunk.role
+                    tokens_tags[(int(word.index), str(word.string))] = word.tag
+                    tokens_chunks[(int(word.index), str(word.string))] = word.chunk
+                    tokens_roles[(int(word.index), str(word.string))] = chunk.role
 
         question1.set_tokens_tags(tokens_tags)
         question1.set_tokens_chunks(tokens_chunks)
@@ -131,9 +133,9 @@ for i in range(0, len(clean_question_pairs)):
         for sentence in question2_parsetree:
             for chunk in sentence.chunks:
                 for word in chunk.words:
-                    tokens_tags[(word.index, word.string)] = word.tag
-                    tokens_chunks[(word.index, word.string)] = word.chunk
-                    tokens_roles[(word.index, word.string)] = chunk.role
+                    tokens_tags[(int(word.index), str(word.string))] = word.tag
+                    tokens_chunks[(int(word.index), str(word.string))] = word.chunk
+                    tokens_roles[(int(word.index), str(word.string))] = chunk.role
 
         question2.set_tokens_tags(tokens_tags)
         question2.set_tokens_chunks(tokens_chunks)
@@ -153,9 +155,9 @@ for i in range(0, len(clean_question_pairs)):
             for sentence in partial_question_parse_tree:
                 for chunk in sentence.chunks:
                     for word in chunk.words:
-                        tokens_tags[(word.index, word.string)] = word.tag
-                        tokens_chunks[(word.index, word.string)] = word.chunk
-                        tokens_roles[(word.index, word.string)] = chunk.role
+                        tokens_tags[(int(word.index), str(word.string))] = word.tag
+                        tokens_chunks[(int(word.index), str(word.string))] = word.chunk
+                        tokens_roles[(int(word.index), str(word.string))] = chunk.role
 
             partial_question_object.set_tokens_tags(tokens_tags)
             partial_question_object.set_tokens_chunks(tokens_chunks)
@@ -167,11 +169,36 @@ for i in range(0, len(clean_question_pairs)):
 
     questions.append((question1, question2))
 
+print("End Processing")
+
+q = questions[0][0]
+
+print("Question: " + str(q.get_question()))
+print("Tokens: " + str(q.get_question_tokens()))
+print("Stemmed Question: " + str(q.get_stemmed_question()))
+print("Stemmed Tokens: " + str(q.get_stemmed_tokens()))
+print("Lemmatized Question" + str(q.get_lemmatized_question()))
+print("Lemmatized Tokens" + str(q.get_lemmatized_tokens()))
+print("Partial Questions: " + str(q.get_partial_questions()))
+print("Parsetree String: " + str(q.get_parse_tree_string()))
+print("Tokens Tags: " + str(q.get_tokens_tags()))
+print("Tokens Roles: " + str(q.get_tokens_roles()))
+print("Tokens Chunks" + str(q.get_tokens_chunks()))
+
+
+
+
+with open('./stored_data/questions_objects_pairs.pickle', "wb") as saver:
+    pickle.dump(questions, saver, protocol=2)
+
 """
-s = 'This battle will be my masterpiece'
+s = 'What is the step by step guide to invest in share market in india?'
 s = parsetree(s, relations=True)
 
 for sentence in s:
-    print(sentence.chunks[0].role)"""
+    for chunk in sentence.chunks:
+        for word in chunk.words:
+            print(str(word.string) + " " + str(chunk.role))
 
 
+"""
