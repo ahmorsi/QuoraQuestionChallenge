@@ -81,9 +81,3 @@ class Question(object):
 
     def get_token_role(self, index, token):
         return self.__tokens_roles[(index, token)]
-
-
-
-
-
-
