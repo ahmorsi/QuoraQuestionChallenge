@@ -35,20 +35,3 @@ preprocessor = Preprocessing(questions_pairs)
 lemmatized_questions_pairs = preprocessor.tokenize_with_lemmatization()
 print("End lemmatized tokenization")
 
-
-print(questions_pairs[0])
-print(tokenized_questions_pairs[0])
-print(stemmed_questions_pairs[0])
-print(lemmatized_questions_pairs[0])
-
-with open('./stored_data/clean_question_pairs.pickle', "wb") as saver:
-    pickle.dump(questions_pairs, saver, protocol=2)
-
-with open('./stored_data/tokenized_question_pairs.pickle', "wb") as saver:
-    pickle.dump(tokenized_questions_pairs, saver, protocol=2)
-
-with open('./stored_data/stemmed_questions_pairs.pickle', "wb") as saver:
-    pickle.dump(stemmed_questions_pairs, saver, protocol=2)
-
-with open('./stored_data/lemmatized_questions_pairs.pickle', "wb") as saver:
-    pickle.dump(lemmatized_questions_pairs, saver, protocol=2)
