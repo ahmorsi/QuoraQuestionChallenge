@@ -2,6 +2,7 @@ from pattern.text.en import parsetree, parse
 import pickle
 from question import Question
 import unicodedata
+from itertools import chain
 
 with open("./stored_data/lemmatized_questions_pairs.pickle", "rb") as loader:
     lemmatized_questions_pairs = pickle.load(loader)
@@ -22,8 +23,16 @@ tokenized_question_pairs = map(lambda v: (map(lambda u: u.encode('ascii', 'ignor
 
 print(len(clean_question_pairs))
 questions = []
-    
-for i in range(0, len(clean_question_pairs)):
+
+def dic_to_string(param):
+    string = ""
+
+    for item in param.items():
+        string += str(item[0][0]) + " " + str(item[0][1]) + " " + str(item[1]) + " "
+
+    return string.strip()
+
+for i in range(40000, 50000):
     print(i)
     question1_string = clean_question_pairs[i][0]
     question2_string = clean_question_pairs[i][1]
@@ -121,12 +130,12 @@ for i in range(0, len(clean_question_pairs)):
                     tokens_chunks[(int(word.index), str(word.string))] = word.chunk
                     tokens_roles[(int(word.index), str(word.string))] = chunk.role
 
-        question1.set_tokens_tags(tokens_tags)
-        question1.set_tokens_chunks(tokens_chunks)
-        question1.set_tokens_roles(tokens_roles)
+        question2.set_tokens_tags(tokens_tags)
+        question2.set_tokens_chunks(tokens_chunks)
+        question2.set_tokens_roles(tokens_roles)
 
     else:
-        parse_string = str(parse(question1_string, relations=True))
+        parse_string = str(parse(question2_string, relations=True))
         question2.set_parse_tree_string(parse_string)
         tokens_tags, tokens_roles, tokens_chunks = {}, {}, {}
 
@@ -173,6 +182,68 @@ print("End Processing")
 
 q = questions[0][0]
 
+with open("./stored_data/data_preprocessing.txt", "a") as writer:
+    for question_pair in questions:
+        writer.write("#\n")
+
+        first_question = question_pair[0]
+        second_question = question_pair[1]
+
+        writer.write(first_question.get_question() + "\n")
+        writer.write(' '.join(first_question.get_question_tokens()) + "\n")
+        writer.write(first_question.get_stemmed_question() + "\n")
+        writer.write(' '.join(first_question.get_stemmed_tokens()) + "\n")
+        writer.write(first_question.get_lemmatized_question() + "\n")
+        writer.write(' '.join(first_question.get_lemmatized_tokens()) + "\n")
+        writer.write(dic_to_string(first_question.get_tokens_tags()) + "\n")
+        writer.write(dic_to_string(first_question.get_tokens_roles()) + "\n")
+        writer.write(dic_to_string(first_question.get_tokens_chunks()) + "\n")
+
+        partial_first_question = first_question.get_partial_questions()
+        writer.write(str(len(partial_first_question)) + "\n")
+
+        for i in range(0, len(partial_first_question)):
+            current_question = partial_first_question[i]
+            writer.write(current_question.get_question() + "\n")
+            writer.write(' '.join(current_question.get_question_tokens()) + "\n")
+            writer.write(current_question.get_stemmed_question() + "\n")
+            writer.write(' '.join(current_question.get_stemmed_tokens()) + "\n")
+            writer.write(current_question.get_lemmatized_question() + "\n")
+            writer.write(' '.join(current_question.get_lemmatized_tokens()) + "\n")
+            writer.write(dic_to_string(current_question.get_tokens_tags()) + "\n")
+            writer.write(dic_to_string(current_question.get_tokens_roles()) + "\n")
+            writer.write(dic_to_string(current_question.get_tokens_chunks()) + "\n")
+
+        writer.write("--\n")
+
+        writer.write(second_question.get_question() + "\n")
+        writer.write(' '.join(second_question.get_question_tokens()) + "\n")
+        writer.write(second_question.get_stemmed_question() + "\n")
+        writer.write(' '.join(second_question.get_stemmed_tokens()) + "\n")
+        writer.write(second_question.get_lemmatized_question() + "\n")
+        writer.write(' '.join(second_question.get_lemmatized_tokens()) + "\n")
+        writer.write(dic_to_string(second_question.get_tokens_tags()) + "\n")
+        writer.write(dic_to_string(second_question.get_tokens_roles()) + "\n")
+        writer.write(dic_to_string(second_question.get_tokens_chunks()) + "\n")
+
+        partial_second_question = second_question.get_partial_questions()
+        writer.write(str(len(partial_second_question)) + "\n")
+
+        for i in range(0, len(partial_second_question)):
+            current_question = partial_second_question[i]
+            writer.write(current_question.get_question() + "\n")
+            writer.write(' '.join(current_question.get_question_tokens()) + "\n")
+            writer.write(current_question.get_stemmed_question() + "\n")
+            writer.write(' '.join(current_question.get_stemmed_tokens()) + "\n")
+            writer.write(current_question.get_lemmatized_question() + "\n")
+            writer.write(' '.join(current_question.get_lemmatized_tokens()) + "\n")
+            writer.write(dic_to_string(current_question.get_tokens_tags()) + "\n")
+            writer.write(dic_to_string(current_question.get_tokens_roles()) + "\n")
+            writer.write(dic_to_string(current_question.get_tokens_chunks()) + "\n")
+
+
+
+
 print("Question: " + str(q.get_question()))
 print("Tokens: " + str(q.get_question_tokens()))
 print("Stemmed Question: " + str(q.get_stemmed_question()))
@@ -187,11 +258,11 @@ print("Tokens Chunks" + str(q.get_tokens_chunks()))
 
 
 
-
+"""
 with open('./stored_data/questions_objects_pairs.pickle', "wb") as saver:
     pickle.dump(questions, saver, protocol=2)
 
-"""
+
 s = 'What is the step by step guide to invest in share market in india?'
 s = parsetree(s, relations=True)
 
